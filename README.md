@@ -1,52 +1,39 @@
-# Desafio DevOps Apiki.
+# Desafio DevOps Apiki 
 
-Objetivo é criar um processo automatizado para construção de um servidor web para [WordPress](https://wordpress.org/) em sua última versão.
+Processo automatizado para construção de um servidor web para WordPress em sua última versão.
 
-O candidato deve seguir os seguintes **Requisitos**;
+## Terraform 
+1. Faça o [download](https://www.terraform.io/downloads) e a instalação do Terraform de acordo com seu sistema operacional;
 
-  - O projeto dever ser configurado na [AWS](https://aws.amazon.com/free/), crie uma conta Free.
-  - A máquina configurada deverar ter às portas 80, 443 e 22 abertas.
-  - Uso de Shell Script **Linux**.
-  - [Docker](https://www.docker.com/) 
+2. Abra o cmd/terminal e vá até a pasta Terraform na qual vc clonou contida no github;
 
-### Arquitertura!
+3. Dê o comando aws configure e coloque as credenciais especificadas no arquivo credentials_terraform.csv;
 
-  - [Nginx](https://www.nginx.com/) configurado como proxy para o Apache.
-  - [Apache](https://www.apache.org/) servidor para o WordPress.
-  - [PHP](https://php.net/) a última versão.
-  - [MySql](https://www.mysql.com/) Versão mínima requirida 5.7.
-  - [WordPress](https://wordpress.org) última versão configurada no servidor Apache.
-  
-  **Modelo conceitual**
+4. Dê os seguintes comandos:
+   
+- terraform init
 
-[![N|Solid](https://apiki.com/wp-content/uploads/2019/05/Screenshot_20190515_174205.png)](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
+- terraform plan
 
----
+- terraform apply
 
-### Se liga!
+5. Aguarde até que finalize o processo.
 
-Você também pode usar como **Diferencial**:
-  
-  - [Docker Compose](https://docs.docker.com/compose/).
-  - [Kubernetes](https://kubernetes.io/).
-  - [Ansible](https://www.ansible.com/).
-  - [RDS AWS](https://aws.amazon.com/pt/rds/).
-  - Outras tecnologias para somar no projeto.  
 
----
+## Criação do ambiente 
+Será criada uma instância t2.micro na AWS com o IAM especificado no credentials_terraform.csv (enviado por e-mail junto com a chave), com nome de desafio-apiki.
 
-### Entrega
+A instância possui armazenamento de 30gb e uma grupo de segurança com as portas 80, 443, 22 e 3306 liberadas.
 
-1. Efetue o fork deste repositório e crie um branch com o seu nome e sobrenome. (exemplo: fulano-dasilva)
-2. Após finalizar o desafio, crie um Pull Request.
-3. Aguarde algum contribuidor realizar o code review.
-4. Deverá conter a documentação para instalação e configuração README.md.
-5. Enviar para o email wphost@apiki.com os dados de acesso SSH com permissão root, da máquina configurada na AWS.
 
----
+## Especificações ##
+Após a criação do ambiente, é executado automaticamente via ansible um script que instala o nginx e o apache, em seguida é executado um arquivo compose do docker que cria 2 contêiners:
 
-### Validação
+- Mysql na versão 5.7;
+ 
+- Wordpress na última versão (5.9.3) com o php também na última versão (8.1);
 
-* Será executado os precessos de instalação e configuração de acordo com a orientação da documentação em um servidor interno da Apiki.
-* Será avaliado o processo de automação para criação do ambiente em cloud, tempo de execução e a configuração no server na AWS com os dados fornecidos pelo candidato.
-* Deverar constar pelo menos 2 containers.
+
+Para fazer a conexão SSH, faça o [login na AWS com o usuário IAM](https://474357573470.signin.aws.amazon.com/console) e pegue o DNS IPv4 público, após isso logue na máquina com o usuário ubuntu passando a chave.
+
+Conecte utilizando as credenciais enviadas para o e-mail wphost@apiki.com.
